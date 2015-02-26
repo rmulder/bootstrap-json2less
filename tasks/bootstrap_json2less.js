@@ -16,6 +16,7 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('bootstrap_json2less', 'Convert a Bootstrap config.json file to variables.less', function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
+      varPrefix: '',// set to '@' if not included in config.json
       banner: '// DO NOT EDIT! GENERATED AUTOMATICALLY with grunt-bootstrap-json2less'
     });
 
@@ -27,13 +28,14 @@ module.exports = function(grunt) {
     this.files.forEach(function (file) {
       // parse, eval and save less variables
       file.src.forEach(function (src) {
-        var content = grunt.file.read(src);
+        var contents = grunt.file.read(src);
+        var content = JSON.parse(contents);
         var lessContent = "";
 
         //console.log('===== this is the output of var content: ', content);
         if (content.vars) {
           for (var key in content.vars) {
-            lessContent += "@" + removeExtension(key.replace(/\\/g, "_"))+ ': "'+key+'";\n';
+            lessContent += options.varPrefix + removeExtension(key.replace(/\\/g, "_"))+ ': "'+key+'";\n';
           }
         }
 
