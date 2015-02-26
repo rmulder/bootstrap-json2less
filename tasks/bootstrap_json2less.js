@@ -30,7 +30,7 @@ module.exports = function(grunt) {
         var content = grunt.file.read(src);
         var lessContent = "";
 
-        console.log('===== this is the output of var content: ', content);
+        //console.log('===== this is the output of var content: ', content);
         if (content.vars) {
           for (var key in content.vars) {
             lessContent += "@" + removeExtension(key.replace(/\\/g, "_"))+ ': "'+key+'";\n';
