@@ -59,7 +59,7 @@ grunt.initConfig({
   bootstrap_json2less: {
     options: {},
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'test/output/variables.less': 'test/input/config.json'
     },
   },
 });
@@ -72,11 +72,10 @@ In this example, custom options are used to do something else with whatever else
 grunt.initConfig({
   bootstrap_json2less: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      banner: '// DO NOT EDIT! GENERATED AUTOMATICALLY with grunt-bootstrap-json2less'
     },
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'test/output/variables.less': 'test/input/config.json'
     },
   },
 });
