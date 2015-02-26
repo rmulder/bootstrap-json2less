@@ -35,10 +35,9 @@ module.exports = function(grunt) {
         //console.log('===== this is the output of var content: ', content);
         if (content.vars) {
           for (var key in content.vars) {
-            lessContent += options.varPrefix + removeExtension(key.replace(/\\/g, "_"))+ ': "'+key+'";\n';
+            lessContent += options.varPrefix + removeExtension(key.replace(/\\/g, "_"))+ ': '+content.vars[key]+';\n';
           }
         }
-
 
         var outputFile = file.dest;
         if (options.banner) {
