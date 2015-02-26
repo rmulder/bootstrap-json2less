@@ -3,6 +3,7 @@
   "description": "Convert a Bootstrap config.json file to variables.less",
   "version": "0.1.0",
   "homepage": "https://github.com/rmulder/bootstrap-json2less",
+  "private": true,
   "author": {
     "name": "Robert Mulder",
     "email": "rmulder@xmission.com"
