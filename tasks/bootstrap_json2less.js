@@ -17,6 +17,7 @@ module.exports = function(grunt) {
     // Merge task-specific and/or target-specific options with these defaults.
     var shell = require('shelljs');
     var options = this.options({
+      dist: null, //distribution folder. Leave blank for same folder
       varPrefix: '',// set to '@' if not included in config.json
       banner: '// DO NOT EDIT! GENERATED AUTOMATICALLY with grunt-bootstrap-json2less'
     });
@@ -77,9 +78,12 @@ module.exports = function(grunt) {
           grunt.file.write(outputFile, lessContent);
         } */
         grunt.log.ok('%s succesfully updated!', outputFile);
+        if (options.dist) {
+          shell.cp('-f', file.dest, options.dist);
+          grunt.log.ok('succesfully copied: %s to: %s', file.dest, options.dist);
+        }
       });
     });
-
   });
 
 };

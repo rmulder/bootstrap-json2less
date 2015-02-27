@@ -32,6 +32,7 @@ module.exports = function(grunt) {
     bootstrap_json2less: {
       default_options: {
         options: {
+          dist: 'test/output/variables_new.less'
         },
         files: {
           'test/output/variables.less': 'test/input/config.json'
