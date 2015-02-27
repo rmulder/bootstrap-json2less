@@ -30,7 +30,7 @@ module.exports = function(grunt) {
     this.files.forEach(function (file) {
       // parse, eval and save less variables
       file.src.forEach(function (src) {
-        var key, search, replace, content, inputContent, lessContent, outputFile = file.dest;
+        var key, $search, $replace, content, inputContent, lessContent, outputFile = file.dest;
         //lessContent = grunt.file.read(outputFile);
         //console.log('lessContent:', lessContent);
         inputContent = grunt.file.read(src);
@@ -40,13 +40,25 @@ module.exports = function(grunt) {
         if (content.vars) {
           for (key in content.vars) {
             //lessContent += options.varPrefix + removeExtension(key.replace(/\\/g, "_"))+ ': "'+key+'";\n';
-            search = options.varPrefix + removeExtension(key.replace(/\\/g, "_")) + ':';
-            replace = search + ' ' + content.vars[key]+';\n';
+            $search = options.varPrefix + removeExtension(key.replace(/\\/g, "_"));
+            //$replace = $search + ' ' + content.vars[key]+';\n';
             //lessContent += options.varPrefix + removeExtension(key.replace(/\\/g, "_"))+ ': '+content.vars[key]+';\n';
-            //console.log('key:', key, 'value:', content.vars[key]);
+            console.log('key:', key, 'value:', content.vars[key]);
 
             //^(\@brand-primary:)(\s+.+;)(.+)
-            shell.sed('-i', '^(\\'+key+':)(\\s+.+;)(.+)', '\\1'+content.vars[key]+'\\3', file.dest);
+            //shell.sed('-i', '^(\\'+key+':)(\\s+.+;)(.+)', '\\1'+content.vars[key]+'\\3', file.dest);
+            console.log('search:', $search);
+
+            //shell.sed('-i', /.*{search}.*\n/, '', file.dest);
+
+            //var regex = new RegExp('^(\\' + $search + ':)(\\s+)(.+;)(.+)','gi');
+
+            //(\@brand-warning):(\s+)(.+);(\(.*?\))?\n
+            //(\@brand-warning):(\s+.+);(.+)?\n
+            var regex1 = new RegExp('(\\' + $search + ':)(\\s+)(.+);(.+)?\\n');
+            //var regex2 = new RegExp('\\$1\\$2' + content.vars[key] + '\\$4');
+            console.log('regex1:', regex1, 'replace with:', content.vars[key]);
+            shell.sed('-i', regex1, "$1$2" + content.vars[key] + ';' + "$4\n", file.dest);
 /*
             var re1 = /^(\@brand-primary:)(\s+.+;)/ig;
             var re2 = /^(\@brand-primary:)(\s+.+;)/ig;
