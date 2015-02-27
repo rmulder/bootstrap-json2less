@@ -43,7 +43,7 @@ module.exports = function(grunt) {
             search = options.varPrefix + removeExtension(key.replace(/\\/g, "_")) + ':';
             replace = search + ' ' + content.vars[key]+';\n';
             //lessContent += options.varPrefix + removeExtension(key.replace(/\\/g, "_"))+ ': '+content.vars[key]+';\n';
-            console.log('key:', key, 'value:', content.vars[key]);
+            //console.log('key:', key, 'value:', content.vars[key]);
 
             //^(\@brand-primary:)(\s+.+;)(.+)
             shell.sed('-i', '^(\\'+key+':)(\\s+.+;)(.+)', '\\1'+content.vars[key]+'\\3', file.dest);
