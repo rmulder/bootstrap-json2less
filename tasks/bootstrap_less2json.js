@@ -28,52 +28,51 @@ module.exports = function (grunt) {
     }
 
     this.files.forEach(function (file) {
-      // parse, eval and save less variables
+      // parse, eval and save less variables to config.json settings file
+      var outputFile = file.dest, outputContent, jsonContent;
+      outputContent = grunt.file.read(outputFile);
+      //console.log('outputContent:', outputContent);
+      jsonContent = JSON.parse(outputContent);
       file.src.forEach(function (src) {
-        var key, $search, content, outputContent, jsonContent, outputFile = file.dest;
-        outputContent = grunt.file.read(outputFile);
-        jsonContent = JSON.parse(outputContent);
-        console.log('jsonContent:', jsonContent);
-/*
- if (content.vars) {
- for (key in content.vars) {
- $search = options.varPrefix + removeExtension(key.replace(/\\/g, "_"));
- var regex1 = new RegExp('(\\' + $search + ':)(\\s+)(.+);(.+)?\\n');
- shell.sed('-i', regex1, "$1$2" + content.vars[key] + ';' + "$4\n", file.dest);
- }
- }
+        var key, value, matches, index, line, content;
+        content = grunt.file.read(src).split('\n');
+        //var regex1 = new RegExp(/^(\\@(.+):)(\\s+)(.+);(.+)?\\n/gi);
+        //var regex1 = new RegExp('(\\@(.+):)(\\s+)(.+);(.+)?\\n');
+        var regex1 = new RegExp('^(\\@.+:)(\\s+)(.+);(.+)?\\n');
+        console.log('regex1:', regex1);
 
- */
-        content = grunt.file.read(src);
-        var parser = new less.Parser({
-          syncImport: true,
-          paths: path.dirname(path.resolve(src)),
-          filename: path.basename(src)
-        });
+        var re = /^(\@.+:)(\s+)(.+);(.+)?/ig;
+        for (index in content) {
+          line = content[index];
+          //console.log('line:', line);
+          //$search = options.varPrefix + removeExtension(key.replace(/\\/g, "_"));
 
-        parser.parse(content, function (err, tree) {
-          var env = new less.tree.evalEnv();
-          var ruleset = tree.eval(env); // jshint ignore:line
-          var prefix = options.ignoreWithPrefix || null;
-
-          ruleset.rules.forEach(function (rule) {
-            if (rule.variable) {
-              var name = rule.name.substr(1); // remove "@"
-
-              if (!prefix || name.substr(0, prefix.length) !== prefix) {
-                var value = rule.value.value[0]; // can be less.tree.Color, less.tree.Expression, etc.
-                lessVars[name] = value.toCSS();
-              }
+          //var matches = line.search(/^(\\@.+:)(\\s+)(.+);(.+)?\\n/gi);
+          //console.log('search: ', line.search(regex1));
+          //console.log('matches:', matches);
+          if ((matches = re.exec(line)) != null) {
+            key = matches[1] || null;
+            value = matches[3] || null;
+            console.log('key:', key, 'value:', value);
+            if (key && value) {
+              jsonContent.vars[key] = value;
             }
-          });
-        });
+          }
+        }
+        //if (jsonContent.vars && content) {
+/*
+          for (key in jsonContent.vars) {
+            $search = options.varPrefix + removeExtension(key.replace(/\\/g, "_"));
+            var regex1 = new RegExp('(\\' + $search + ':)(\\s+)(.+);(.+)?\\n');
+            console.log('$search:', $search, 'regex1:', regex1);
+            //shell.sed('-i', regex1, "$1$2" + jsonContent.vars[key] + ';' + "$4\n", file.dest);
+          }
+          */
+        //}
+
       });
-
-      // process and write the data
-      var output = JSON.stringify(lessVars, null, 2);
-      var outputFile = file.dest;
-
-      grunt.file.write(outputFile, output);
+      //console.log('updated jsonContent:', jsonContent.vars);
+      grunt.file.write(outputFile, JSON.stringify(jsonContent, null, 2));
       grunt.log.ok('%s succesfully created!', outputFile);
       if (options.dist) {
         shell.cp('-f', file.dest, options.dist);
