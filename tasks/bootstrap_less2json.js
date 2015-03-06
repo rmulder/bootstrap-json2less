@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         var regex1 = new RegExp('^(\\@.+:)(\\s+)(.+);(.+)?\\n');
         console.log('regex1:', regex1);
 
-        var re = /^(\@.+:)(\s+)(.+);(.+)?/ig;
+        var re = /^(\@.+):(\s+)(.+);(.+)?/ig;
         for (index in content) {
           line = content[index];
           //console.log('line:', line);
@@ -53,9 +53,9 @@ module.exports = function (grunt) {
           if ((matches = re.exec(line)) != null) {
             key = matches[1] || null;
             value = matches[3] || null;
-            console.log('key:', key, 'value:', value);
             if (key && value) {
-              jsonContent.vars[key] = value;
+              console.log('key:', key, 'value:', value, 'jsonContent.vars[key]:', jsonContent.vars[key]);
+              jsonContent.vars[""+key] = value;
             }
           }
         }
