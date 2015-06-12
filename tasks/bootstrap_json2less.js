@@ -59,7 +59,7 @@ module.exports = function(grunt) {
         if (options.bs_dir) {
           shell.cd(options.bs_dir);
           //build new bootstrap files
-          if (shell.exec('grunt').code !== 0) {
+          if (shell.exec('grunt dist').code !== 0) {
             shell.echo('Error: Bootstrap build failed');
             shell.exit(1);
           }          
