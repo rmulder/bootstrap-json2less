@@ -17,7 +17,8 @@ module.exports = function(grunt) {
     // Merge task-specific and/or target-specific options with these defaults.
     var shell = require('shelljs');
     var options = this.options({
-      dist: null, //distribution folder. Leave blank for same folder
+      dist: null, 
+      bs_dir: null, //bootstrap directory. Leave blank for same folder
       varPrefix: '',// set to '@' if not included in config.json
       banner: '// DO NOT EDIT! CREATED/EDITED AUTOMATICALLY with grunt-bootstrap-json2less'
     });
@@ -54,6 +55,15 @@ module.exports = function(grunt) {
         if (options.dist) {
           shell.cp('-f', file.dest, options.dist);
           grunt.log.ok('successfully copied: %s to: %s', file.dest, options.dist);
+        }
+        if (options.bs_dir) {
+          shell.cd(options.bs_dir);
+          //build new bootstrap files
+          if (shell.exec('grunt').code !== 0) {
+            shell.echo('Error: Bootstrap build failed');
+            shell.exit(1);
+          }          
+          grunt.log.ok('successfully built new bootstrap files in directory: %s', options.bs_dir);
         }
       });
     });
