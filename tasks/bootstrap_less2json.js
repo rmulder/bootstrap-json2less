@@ -57,7 +57,5 @@ module.exports = function (grunt) {
         grunt.log.ok('successfully copied: %s to: %s', file.dest, options.dist);
       }
     });
-
   });
-
 };
